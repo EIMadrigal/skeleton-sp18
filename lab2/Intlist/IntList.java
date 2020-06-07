@@ -81,8 +81,24 @@ public class IntList {
      */
 
     public static IntList dcatenate(IntList A, IntList B) {
-        //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+
+        IntList p = A;
+        while (p.rest != null) {
+            p = p.rest;
+        }
+        p.rest = B;
+        return A;
+    }
+    public static IntList dcatenateRecur(IntList A, IntList B) {
+        if (A.rest == null) {
+            A.rest = B;
+            return A;
+        }
+        A.rest = dcatenateRecur(A.rest, B);
+        return A;
     }
 
     /**
@@ -90,24 +106,28 @@ public class IntList {
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
     public static IntList catenate(IntList A, IntList B) {
-        //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        IntList res = new IntList(A.first, null);
+        IntList p = res;
+        A = A.rest;
+        while (A != null) {
+            p.rest = new IntList(A.first, null);
+            A = A.rest;
+            p = p.rest;
+        }
+        p.rest = B;
+        return res;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public static IntList catenateRecur(IntList A, IntList B) {
+        if (A == null) {
+            return B;
+        }
+        IntList res = new IntList(A.first,null);
+        res.rest = catenateRecur(A.rest, B);
+        return res;
+    }
 
     /**
      * DO NOT MODIFY ANYTHING BELOW THIS LINE! Many of the concepts below here
@@ -186,7 +206,6 @@ public class IntList {
 
         int cnt = 0;
 
-
         while (true) {
             cnt++;
             if (hare.rest != null) {
@@ -231,4 +250,3 @@ public class IntList {
         return out.toString();
     }
 }
-
