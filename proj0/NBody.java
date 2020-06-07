@@ -11,7 +11,7 @@ public class NBody {
 		return radius;
 	}
 	
-	public static Planet[] readBodies(String file) {
+	public static Planet[] readPlanets(String file) {
 		In in = new In(file);
 		int N = in.readInt();
 		Planet[] bodies = new Planet[N];
