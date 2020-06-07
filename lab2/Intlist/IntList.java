@@ -11,11 +11,11 @@ public class IntList {
     /**
      * First element of list.
      */
-    public int first;
+    private int first;
     /**
      * Remaining elements of list.
      */
-    public IntList rest;
+    private IntList rest;
 
     /**
      * A List with first FIRST0 and rest REST0.
@@ -124,7 +124,7 @@ public class IntList {
         if (A == null) {
             return B;
         }
-        IntList res = new IntList(A.first,null);
+        IntList res = new IntList(A.first, null);
         res.rest = catenateRecur(A.rest, B);
         return res;
     }
