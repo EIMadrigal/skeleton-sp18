@@ -67,12 +67,12 @@ public class ArrayDeque<T> {
 
     public T removeFirst() {
         if (isEmpty()) {
-			return null;
-		}
+            return null;
+        }
         T x = items[front];
         items[front] = null;
         front = (front + 1) % items.length;
-		
+        
         useRatio = 1.0 * size() / items.length;
         if (items.length >= 16 && useRatio < 0.25) {
             halfSize();
@@ -81,9 +81,9 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
-		if (isEmpty()) {
-			return null;
-		}
+        if (isEmpty()) {
+            return null;
+        }
         int index = (rear - 1 + items.length) % items.length;
         T x = items[index];
         items[index] = null;
