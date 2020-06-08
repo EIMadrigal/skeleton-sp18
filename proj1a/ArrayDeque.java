@@ -11,12 +11,6 @@ public class ArrayDeque<T> {
         items = (T[]) new Object[INIT_CAPACITY];
     }
 
-    public ArrayDeque(ArrayDeque<T> other) {
-        for (int i = 0; i < other.size(); ++i) {
-            addLast(other.get(i));
-        }
-    }
-
     public void addFirst(T item) {
         front = (front - 1 + items.length) % items.length;
         items[front] = item;
@@ -72,7 +66,7 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-		if (isEmpty()) {
+        if (isEmpty()) {
 			return null;
 		}
         T x = items[front];

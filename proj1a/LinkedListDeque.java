@@ -4,9 +4,9 @@ public class LinkedListDeque<T> {
     private int size;
 
     private class Node {
-        public T item;
-        public Node prev;
-        public Node next;
+        private T item;
+        private Node prev;
+        private Node next;
 
         public Node(T item, Node prev, Node next) {
             this.item = item;
@@ -20,20 +20,6 @@ public class LinkedListDeque<T> {
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
         size = 0;
-    }
-
-    /**
-     * @source Got help with Josh Hug from https://www.youtube.com/watch?v=JNroRiEG7U4
-     * */
-    public LinkedListDeque(LinkedListDeque<T> other) {
-        sentinel = new Node(null, null, null);
-        sentinel.prev = sentinel;
-        sentinel.next = sentinel;
-        size = 0;
-
-        for (int i = 0; i < other.size(); ++i) {
-            addLast(other.get(i));
-        }
     }
 
     public void addFirst(T item) {
@@ -112,7 +98,7 @@ public class LinkedListDeque<T> {
             return null;
         }
         if (index == 0) {
-            return sentinel.item;
+            return sentinel.next.item;
         }
         sentinel = sentinel.next;
         return getRecursive(index - 1);
