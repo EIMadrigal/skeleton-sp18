@@ -97,8 +97,14 @@ public class Percolation {
         if (row < 0 || row >= N || col < 0 || col >= N) {
             throw new IndexOutOfBoundsException("out of bound.");
         }
-        int index = row * N + col;
+        if (!isOpen(row, col)) {
+            return false;
+        }
 
+        int index = row * N + col;
+        if (row == 0) {
+            return true;
+        }
         // avoid backwash
         if (index - 1 >= 0 && UF.connected(index - 1, virtualTop)) {
             return true;
