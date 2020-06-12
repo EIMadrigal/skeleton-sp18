@@ -56,7 +56,7 @@ public class Percolation {
                 UF.union(index, index - 1);
             }
         }
-        if (index + 1 < N && col + 1 < N && isOpen(row, col + 1)) {
+        if (index + 1 < N * N && col + 1 < N && isOpen(row, col + 1)) {
             if (isFull(row, col + 1)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index + 1);
@@ -106,19 +106,18 @@ public class Percolation {
             return true;
         }
         // avoid backwash
-        if (index - 1 >= 0 && UF.connected(index - 1, virtualTop)) {
+        if (col - 1 >= 0 && index - 1 >= 0 && UF.connected(index - 1, virtualTop)) {
             return true;
         }
-        if (index + 1 < N && UF.connected(index + 1, virtualTop)) {
+        if (col + 1 < N && index + 1 < N * N && UF.connected(index + 1, virtualTop)) {
             return true;
         }
-        if (index - N >= 0 && UF.connected(index - N, virtualTop)) {
+        if (row - 1 >= 0 && index - N >= 0 && UF.connected(index - N, virtualTop)) {
             return true;
         }
-        if (index + N < N * N && UF.connected(index + N, virtualTop)) {
+        if (row + 1 < N && index + N < N * N && UF.connected(index + N, virtualTop)) {
             return true;
         }
-
         return false;
     }
 
