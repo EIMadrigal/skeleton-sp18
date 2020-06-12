@@ -2,7 +2,8 @@ package byog.Core;
 
 import byog.TileEngine.TETile;
 
-/** This is the main entry point for the program. This class simply parses
+/**
+ * This is the main entry point for the program. This class simply parses
  *  the command line inputs, and lets the byog.Core.Game class take over
  *  in either keyboard or input string mode.
  */

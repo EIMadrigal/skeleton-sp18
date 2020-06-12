@@ -93,4 +93,9 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
         return p.item;
     }
+
+    public static void main(String[] args) {
+        Deque<Character> someList = new LinkedListDeque<>();
+        someList.addFirst('c');
+    }
 }
