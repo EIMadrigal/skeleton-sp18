@@ -10,6 +10,7 @@ public class Percolation {
     private int virtualTop;  // for the sake of O(1)
     private int virtualBottom;
     private WeightedQuickUnionUF UF;
+    private WeightedQuickUnionUF antiBackwash;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N)   {
@@ -27,6 +28,7 @@ public class Percolation {
         virtualBottom = N * N + 1;
         numOfOpen = 0;
         UF = new WeightedQuickUnionUF(N * N + 2);
+        antiBackwash = new WeightedQuickUnionUF(N * N + 1);
     }
 
     // open the site (row, col) if it is not open already
@@ -44,6 +46,7 @@ public class Percolation {
         int index = row * N + col;
         if (row == 0) {
             UF.union(virtualTop, index);
+            antiBackwash.union(virtualTop, index);
         }
         if (row == N - 1) {
             UF.union(virtualBottom, index);
@@ -52,32 +55,48 @@ public class Percolation {
             if (isFull(row, col - 1)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index - 1);
+
+                antiBackwash.union(virtualTop, index);
+                antiBackwash.union(virtualTop, index - 1);
             } else {
                 UF.union(index, index - 1);
+                antiBackwash.union(index, index - 1);
             }
         }
         if (index + 1 < N * N && col + 1 < N && isOpen(row, col + 1)) {
             if (isFull(row, col + 1)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index + 1);
+
+                antiBackwash.union(virtualTop, index);
+                antiBackwash.union(virtualTop, index + 1);
             } else {
                 UF.union(index, index + 1);
+                antiBackwash.union(index, index + 1);
             }
         }
         if (index - N >= 0 && row - 1 >= 0 && isOpen(row - 1, col)) {
             if (isFull(row - 1, col)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index - N);
+
+                antiBackwash.union(virtualTop, index);
+                antiBackwash.union(virtualTop, index - N);
             } else {
                 UF.union(index, index - N);
+                antiBackwash.union(index, index - N);
             }
         }
         if (index + N < N * N && row + 1 < N && isOpen(row + 1, col)) {
             if (isFull(row + 1, col)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index + N);
+
+                antiBackwash.union(virtualTop, index);
+                antiBackwash.union(virtualTop, index + N);
             } else {
                 UF.union(index, index + N);
+                antiBackwash.union(index, index + N);
             }
         }
     }
@@ -105,7 +124,7 @@ public class Percolation {
         if (row == 0) {
             return true;
         }
-        // avoid backwash
+        /* avoid backwash
         if (col - 1 >= 0 && index - 1 >= 0 && UF.connected(index - 1, virtualTop)) {
             return true;
         }
@@ -116,6 +135,10 @@ public class Percolation {
             return true;
         }
         if (row + 1 < N && index + N < N * N && UF.connected(index + N, virtualTop)) {
+            return true;
+        }*/
+
+        if (antiBackwash.connected(virtualTop, index)) {
             return true;
         }
         return false;
