@@ -43,11 +43,11 @@ public class PercolationStats {
 
     // low endpoint of 95% confidence interval
     public double confidenceLow() {
-        return mean() - 1.96 * Math.sqrt(stddev()) / Math.sqrt(T);
+        return mean() - 1.96 * stddev() / Math.sqrt(T);
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-        return mean() + 1.96 * Math.sqrt(stddev()) / Math.sqrt(T);
+        return mean() + 1.96 * stddev() / Math.sqrt(T);
     }
 }
