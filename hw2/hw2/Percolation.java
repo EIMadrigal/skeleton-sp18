@@ -5,11 +5,11 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private boolean[][] gridState;
-    private int N;
+
     private int numOfOpen;
     private int virtualTop;  // for the sake of O(1)
     private int virtualBottom;
-    public WeightedQuickUnionUF UF;
+    private WeightedQuickUnionUF UF;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N)   {
@@ -17,7 +17,6 @@ public class Percolation {
             throw new IllegalArgumentException("N should be greater than 0.");
         }
 
-        this.N = N;
         gridState = new boolean[N][N];
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < N; ++j) {
@@ -37,7 +36,7 @@ public class Percolation {
             throw new IndexOutOfBoundsException("out of bound.");
         }
 
-        if (gridState[row][col] == false) {
+        if (!gridState[row][col]) {
             gridState[row][col] = true;  // 1 stands for open
             ++numOfOpen;
         }
@@ -46,42 +45,38 @@ public class Percolation {
         if (row == 0) {
             UF.union(virtualTop, index);
         }
-        if (row == N - 1){
+        if (row == N - 1) {
             UF.union(virtualBottom, index);
         }
-        if (index - 1 >= 0 && isOpen(row, col - 1)) {
+        if (index - 1 >= 0 && col - 1 >= 0 && isOpen(row, col - 1)) {
             if (isFull(row, col - 1)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index - 1);
-            }
-            else {
+            } else {
                 UF.union(index, index - 1);
             }
         }
-        if (index + 1 < N && isOpen(row, col + 1)) {
+        if (index + 1 < N && col + 1 < N && isOpen(row, col + 1)) {
             if (isFull(row, col + 1)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index + 1);
-            }
-            else {
+            } else {
                 UF.union(index, index + 1);
             }
         }
-        if (index - N >= 0 && isOpen(row - 1, col)) {
+        if (index - N >= 0 && row - 1 >= 0 && isOpen(row - 1, col)) {
             if (isFull(row - 1, col)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index - N);
-            }
-            else {
+            } else {
                 UF.union(index, index - N);
             }
         }
-        if (index + N < N * N && isOpen(row + 1, col)) {
+        if (index + N < N * N && row + 1 < N && isOpen(row + 1, col)) {
             if (isFull(row + 1, col)) {
                 UF.union(virtualTop, index);
                 UF.union(virtualTop, index + N);
-            }
-            else {
+            } else {
                 UF.union(index, index + N);
             }
         }
