@@ -7,7 +7,7 @@ import java.util.Set;
  *  A hash table-backed Map implementation. Provides amortized constant time
  *  access to elements via get(), remove(), and put() in the best case.
  *
- *  @author Your name here
+ *  @author EIMadrigal
  */
 public class MyHashMap<K, V> implements Map61B<K, V> {
 
@@ -53,19 +53,40 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        return buckets[hash(key)].get(key);
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        int index = hash(key);
+        if (!buckets[index].containsKey(key)) {
+            ++size;
+            if (loadFactor() > MAX_LF) {
+                resize();
+            }
+        } else {
+            V a = buckets[index].get(key);
+            buckets[index].remove(key, a);
+        }
+
+        buckets[index].put(key, value);
+    }
+
+    private void resize() {
+        int oriCap = buckets.length;
+        ArrayMap<K, V>[] newBuckets = new ArrayMap[2 * oriCap];
+        System.arraycopy(buckets, 0, newBuckets, 0, oriCap);
+        buckets = newBuckets;
+        for (int i = oriCap; i < this.buckets.length; i += 1) {
+            this.buckets[i] = new ArrayMap<>();
+        }
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
