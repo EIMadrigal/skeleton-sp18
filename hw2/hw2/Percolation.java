@@ -4,11 +4,13 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    private boolean[][] gridState;
-
     private int numOfOpen;
     private int virtualTop;  // for the sake of O(1)
     private int virtualBottom;
+
+    private boolean[][] gridState;
+    private int N;
+
     private WeightedQuickUnionUF UF;
     private WeightedQuickUnionUF antiBackwash;
 
@@ -18,39 +20,51 @@ public class Percolation {
             throw new IllegalArgumentException("N should be greater than 0.");
         }
 
+        this.N = N;
         gridState = new boolean[N][N];
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < N; ++j) {
-                gridState[i][j] = false;  // 0 stands for blocked
+                gridState[i][j] = false;
             }
         }
         virtualTop = N * N;
         virtualBottom = N * N + 1;
         numOfOpen = 0;
+
         UF = new WeightedQuickUnionUF(N * N + 2);
         antiBackwash = new WeightedQuickUnionUF(N * N + 1);
     }
 
     // open the site (row, col) if it is not open already
     public void open(int row, int col) {
-        int N = gridState.length;
-        if (row < 0 || row >= N || col < 0 || col >= N) {
+        if (!validate(row, col)) {
             throw new IndexOutOfBoundsException("out of bound.");
         }
 
         if (!gridState[row][col]) {
-            gridState[row][col] = true;  // 1 stands for open
+            gridState[row][col] = true;
             ++numOfOpen;
         }
 
-        int index = row * N + col;
         if (row == 0) {
-            UF.union(virtualTop, index);
-            antiBackwash.union(virtualTop, index);
+            UF.union(virtualTop, xyto1D(row, col));
+            antiBackwash.union(virtualTop, xyto1D(row, col));
         }
         if (row == N - 1) {
-            UF.union(virtualBottom, index);
+            UF.union(virtualBottom, xyto1D(row, col));
         }
+
+        int[] drow = {0, 1, 0, -1};
+        int[] dcol = {-1, 0, 1, 0};
+        for (int i = 0; i < 4; ++i) {
+            int nextrow = row + drow[i];
+            int nextcol = col + dcol[i];
+            if (validate(nextrow, nextcol) && isOpen(nextrow, nextcol)) {
+                UF.union(xyto1D(nextrow, nextcol), xyto1D(row, col));
+                antiBackwash.union(xyto1D(nextrow, nextcol), xyto1D(row, col));
+            }
+        }
+/*
         if (index - 1 >= 0 && col - 1 >= 0 && isOpen(row, col - 1)) {
             if (isFull(row, col - 1)) {
                 UF.union(virtualTop, index);
@@ -98,13 +112,20 @@ public class Percolation {
                 UF.union(index, index + N);
                 antiBackwash.union(index, index + N);
             }
-        }
+        }*/
+    }
+
+    private boolean validate(int row, int col) {
+        return row >= 0 && row < N && col >= 0 && col < N;
+    }
+
+    private int xyto1D(int row, int col) {
+        return row * N + col;
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        int N = gridState.length;
-        if (row < 0 || row >= N || col < 0 || col >= N) {
+        if (!validate(row, col)) {
             throw new IndexOutOfBoundsException("out of bound.");
         }
         return gridState[row][col];
@@ -112,19 +133,13 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        int N = gridState.length;
-        if (row < 0 || row >= N || col < 0 || col >= N) {
+        if (!validate(row, col)) {
             throw new IndexOutOfBoundsException("out of bound.");
         }
-        if (!isOpen(row, col)) {
-            return false;
-        }
+        
+        return isOpen(row, col) && antiBackwash.connected(virtualTop, xyto1D(row, col));
 
-        int index = row * N + col;
-        if (row == 0) {
-            return true;
-        }
-        /* avoid backwash
+        /* wrong avoid backwash
         if (col - 1 >= 0 && index - 1 >= 0 && UF.connected(index - 1, virtualTop)) {
             return true;
         }
@@ -136,12 +151,7 @@ public class Percolation {
         }
         if (row + 1 < N && index + N < N * N && UF.connected(index + N, virtualTop)) {
             return true;
-        }*/
-
-        if (antiBackwash.connected(virtualTop, index)) {
-            return true;
-        }
-        return false;
+        } */
     }
 
     // number of open sites

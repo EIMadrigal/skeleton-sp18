@@ -5,10 +5,7 @@ import edu.princeton.cs.introcs.StdStats;
 
 public class PercolationStats {
 
-    private int N;
     private int T;
-    private Percolation per;
-
     private double[] threshold;
 
     // perform T independent experiments on an N-by-N grid
@@ -18,13 +15,16 @@ public class PercolationStats {
         }
 
         threshold = new double[T];
-        this.N = N;
         this.T = T;
         for (int i = 0; i < T; ++i) {
-            per = pf.make(N);
+            Percolation per = pf.make(N);
             while (!per.percolates()) {
                 int randomRow = StdRandom.uniform(N);
                 int randomCol = StdRandom.uniform(N);
+                while (per.isOpen(randomRow, randomCol)) {
+                    randomRow = StdRandom.uniform(N);
+                    randomCol = StdRandom.uniform(N);
+                }
                 per.open(randomRow, randomCol);
             }
             threshold[i] = 1.0 * per.numberOfOpenSites() / (N * N);
