@@ -59,18 +59,15 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        int index = hash(key);
-        if (!buckets[index].containsKey(key)) {
-            ++size;
-            if (loadFactor() > MAX_LF) {
-                resize();
-            }
-        } else {
-            V a = buckets[index].get(key);
-            buckets[index].remove(key, a);
+        if (loadFactor() > MAX_LF) {
+            resize();
         }
 
-        buckets[index].put(key, value);
+        int bucketIdx = hash(key);
+        if (!buckets[bucketIdx].containsKey(key)) {
+            ++size;
+        }
+        buckets[bucketIdx].put(key, value);
     }
 
     private void resize() {
