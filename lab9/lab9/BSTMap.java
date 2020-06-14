@@ -149,7 +149,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             }
             Node t = x;
             x = findMin(x.right);
-            x.right = remove(t.right, t.key);
+            x.right = remove(t.right, x.key);
             x.left = t.left;
         }
         return x;
