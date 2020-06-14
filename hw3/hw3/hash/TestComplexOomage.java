@@ -1,10 +1,12 @@
 package hw3.hash;
 
+import edu.princeton.cs.introcs.StdRandom;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestComplexOomage {
@@ -33,18 +35,28 @@ public class TestComplexOomage {
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(oomages, 10));
     }
 
-    /* TODO: Create a list of Complex Oomages called deadlyList
+    /*
      * that shows the flaw in the hashCode function.
      */
-    /*
     @Test
     public void testWithDeadlyParams() {
         List<Oomage> deadlyList = new ArrayList<>();
+        int N = 10000;
 
-        // Your code here.
+        // since 256^4,5,6...=0, ...+256^5*z+256^4*x+256^3*c+256^2*v+256*b+n
+        // for each loop, if last 4 params are same, no matter what the front params are,
+        // the hashcode will be the same, will not spread nice, test fail.
+        for (int i = 0; i < N; i += 1) {
+            List<Integer> params = new ArrayList<>();
+            params.add(StdRandom.uniform(255));
+            for (int j = 0; j < 4; ++j) {
+                params.add(j);
+            }
+            deadlyList.add(new ComplexOomage(params));
+        }
 
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
-    } */
+    }
 
     /** Calls tests for SimpleOomage. */
     public static void main(String[] args) {
