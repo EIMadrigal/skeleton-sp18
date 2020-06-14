@@ -1,5 +1,6 @@
 package lab9;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -102,7 +103,18 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        Set<K> keyset = new HashSet<>();
+        keySetHelper(root, keyset);
+        return keyset;
+    }
+
+    private void keySetHelper(Node root, Set<K> keyset) {
+        if (root == null) {
+            return;
+        }
+        keyset.add(root.key);
+        keySetHelper(root.left, keyset);
+        keySetHelper(root.right, keyset);
     }
 
     /** Removes KEY from the tree if present
@@ -111,7 +123,43 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V removal = get(key);
+        if (removal != null) {
+            --size;
+        }
+        root = remove(root, key);
+        return removal;
+    }
+
+    private Node remove(Node x, K key) {
+        if (x == null) {
+            return null;
+        }
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
+            x.left = remove(x.left, key);
+        } else if (cmp > 0) {
+            x.right = remove(x.right, key);
+        } else {
+            if (x.right == null) {
+                return x.left;
+            }
+            if (x.left == null) {
+                return x.right;
+            }
+            Node t = x;
+            x = findMin(x.right);
+            x.right = remove(t.right, t.key);
+            x.left = t.left;
+        }
+        return x;
+    }
+
+    private Node findMin(Node root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
     }
 
     /** Removes the key-value entry for the specified key only if it is
@@ -120,11 +168,15 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      **/
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        V removal = null;
+        if (get(key).equals(value)) {
+            removal = remove(key);
+        }
+        return removal;
     }
 
     @Override
     public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
+        return keySet().iterator();
     }
 }
