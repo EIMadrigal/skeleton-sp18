@@ -1,6 +1,7 @@
 package hw4.puzzle;
 
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +12,12 @@ public class Solver {
     private MinPQ<Node> minPQ;
     private Map<WorldState, Integer> estimateDisCach;
 
-    private class Node implements Comparable<Node>{
+    private class Node implements Comparable<Node> {
         private WorldState worldState;
         private Node pre;
 
-        private int disToCur;  // the number of moves made to reach this world state from the initial state.
+        // the number of moves made to reach this world state from the initial state.
+        private int disToCur;
         private int estimateDis;
         private int priority;
 
