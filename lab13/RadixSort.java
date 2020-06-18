@@ -26,19 +26,20 @@ public class RadixSort {
         }
 
         String[][] buckets = new String[R][asciis.length];
-        int[] cnt = new int[R];
+
 
         for (int d = maxLen - 1; d >= 0; --d) {
             int n = 0;
+            int[] cnt = new int[R];
             // allocation
             for (int i = 0; i < asciis.length; ++i) {
-                int curChar = asciis[i].length() < maxLen ? 0 : (int) asciis[i].charAt(d);
+                int curChar = d < asciis[i].length() ? (int) asciis[i].charAt(d) : 0;
                 buckets[curChar][cnt[curChar]++] = asciis[i];
             }
 
             // collection
             for (int j = 0; j < buckets.length; ++j) {
-                for (int k = 0; k < buckets[j].length;++k) {
+                for (int k = 0; k < cnt[j]; ++k) {
                     sorted[n++] = buckets[j][k];
                 }
             }
@@ -70,5 +71,12 @@ public class RadixSort {
     private static void sortHelperMSD(String[] asciis, int start, int end, int index) {
         // Optional MSD helper method for optional MSD radix sort
         return;
+    }
+
+    public static void main(String[] args) {
+        String[] asciis = {"a", "abc", "b", "ab"};
+        for (String s : sort(asciis)) {
+            System.out.println(s);
+        }
     }
 }
