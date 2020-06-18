@@ -5,6 +5,9 @@
  *
  */
 public class RadixSort {
+
+    private static final int R = 256;
+
     /**
      * Does LSD radix sort on the passed in array with the following restrictions:
      * The array can only have ASCII Strings (sequence of 1 byte characters)
@@ -16,8 +19,31 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        // TODO: Implement LSD Sort
-        return null;
+        String[] sorted = new String[asciis.length];
+        int maxLen = Integer.MIN_VALUE;
+        for (String ascii : asciis) {
+            maxLen = Math.max(maxLen, ascii.length());
+        }
+
+        String[][] buckets = new String[R][asciis.length];
+        int[] cnt = new int[R];
+
+        for (int d = maxLen - 1; d >= 0; --d) {
+            int n = 0;
+            // allocation
+            for (int i = 0; i < asciis.length; ++i) {
+                int curChar = asciis[i].length() < maxLen ? 0 : (int) asciis[i].charAt(d);
+                buckets[curChar][cnt[curChar]++] = asciis[i];
+            }
+
+            // collection
+            for (int j = 0; j < buckets.length; ++j) {
+                for (int k = 0; k < buckets[j].length;++k) {
+                    sorted[n++] = buckets[j][k];
+                }
+            }
+        }
+        return sorted;
     }
 
     /**
