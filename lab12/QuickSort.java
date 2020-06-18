@@ -47,13 +47,47 @@ public class QuickSort {
     private static <Item extends Comparable> void partition(
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
-        // Your code here!
+        for (Item item : unsorted) {
+            int cmp = pivot.compareTo(item);
+            if (cmp < 0) {
+                greater.enqueue(item);
+            } else if (cmp > 0) {
+                less.enqueue(item);
+            } else {
+                equal.enqueue(item);
+            }
+        }
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        // Your code here!
-        return items;
+        if (items.size() <= 1) {
+            return items;
+        }
+        Item pivot = getRandomItem(items);
+        Queue<Item> less = new Queue<>();
+        Queue<Item> equal = new Queue<>();
+        Queue<Item> greater = new Queue<>();
+        partition(items, pivot, less, equal, greater);
+        return catenate(catenate(quickSort(less), equal), quickSort(greater));
+    }
+
+    public static void main(String[] args) {
+        Queue<String> students = new Queue<String>();
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("Bob");
+        for (String s : students) {
+            System.out.println(s);
+        }
+        Queue<String> sortedStu = MergeSort.mergeSort(students);
+        for (String s : students) {
+            System.out.println(s);
+        }
+        for (String s : sortedStu) {
+            System.out.println(s);
+        }
     }
 }
