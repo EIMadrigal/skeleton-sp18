@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdOut;
+
 /**
  * Class for doing Radix sort
  *
@@ -5,50 +7,18 @@
  *
  */
 public class RadixSort {
+    static int RADIX = 256;
 
-    private static final int R = 256;
-
-    /**
-     * Does LSD radix sort on the passed in array with the following restrictions:
-     * The array can only have ASCII Strings (sequence of 1 byte characters)
-     * The sorting is stable and non-destructive
-     * The Strings can be variable length (all Strings are not constrained to 1 length)
-     *
-     * @param asciis String[] that needs to be sorted
-     *
-     * @return String[] the sorted array
-     */
     public static String[] sort(String[] asciis) {
-        int N = asciis.length;
-        String[] sorted = new String[N];
-        String[] tmp = new String[N];
-        System.arraycopy(asciis, 0, tmp, 0, N);
-        int maxLen = Integer.MIN_VALUE;
-        for (String ascii : asciis) {
-            maxLen = Math.max(maxLen, ascii.length());
+        int maxLength = Integer.MIN_VALUE;
+        for (String s : asciis) {
+            maxLength = maxLength > s.length() ? maxLength : s.length();
         }
-
-        // based on counting sort, just count sort every digit
-        for (int d = maxLen - 1; d >= 0; --d) {
-            int[] cnt = new int[R + 1];
-            for (int i = 0; i < N; ++i) {
-                int curChar = d < tmp[i].length() ? (int) tmp[i].charAt(d) : 0;
-                cnt[curChar]++;
-            }
-
-            for (int j = 0; j < R; ++j) {
-                cnt[j + 1] += cnt[j];
-            }
-
-            for (int k = N - 1; k >= 0; --k) {
-                int curChar = d < tmp[k].length() ? (int) tmp[k].charAt(d) : 0;
-                sorted[cnt[curChar] - 1] = tmp[k];
-                cnt[curChar]--;
-            }
-
-            tmp = sorted.clone();
+        String[] res = asciis.clone();
+        for (int d = maxLength - 1; d >= 0; d--) {
+            res = sortHelperLSD(res, d);
         }
-        return sorted;
+        return res;
     }
 
     /**
@@ -57,9 +27,37 @@ public class RadixSort {
      * @param asciis Input array of Strings
      * @param index The position to sort the Strings on.
      */
-    private static void sortHelperLSD(String[] asciis, int index) {
-        // Optional LSD helper method for required LSD radix sort
-        return;
+    private static String[] sortHelperLSD(String[] asciis, int index) {
+
+        int[] counts = new int[RADIX];
+        for (String s: asciis) {
+            if (s.length() - 1 < index) {
+                counts[0]++;
+            } else {
+                counts[s.charAt(index)]++;
+            }
+        }
+
+        int[] starts = new int[RADIX];
+        int pos = 0;
+        for (int i = 0; i < starts.length; i += 1) {
+            starts[i] = pos;
+            pos += counts[i];
+        }
+
+        String[] sorted = new String[asciis.length];
+        for (String s: asciis) {
+            if (s.length() -1 < index) {
+                int place = starts[0];
+                sorted[place] = s;
+                starts[0] += 1;
+            } else {
+                int place = starts[s.charAt(index)];
+                sorted[place] = s;
+                starts[s.charAt(index)] += 1;
+            }
+        }
+        return sorted;
     }
 
     /**
@@ -78,9 +76,10 @@ public class RadixSort {
     }
 
     public static void main(String[] args) {
-        String[] asciis = {"ab", "a", "bc"};
-        for (String s : sort(asciis)) {
-            System.out.println(s);
+        String[] asciis = new String[]{"sa", "b", "zsd", "gwrsyj", "gds", "gwasyj"};
+        asciis = sort(asciis);
+        for (String s: asciis) {
+            StdOut.println(s);
         }
     }
 }
