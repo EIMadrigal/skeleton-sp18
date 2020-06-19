@@ -19,20 +19,20 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        String[] sorted = new String[asciis.length];
-        System.arraycopy(asciis, 0, sorted, 0, asciis.length);
+        int N = asciis.length;
+        String[] sorted = new String[N];
+        System.arraycopy(asciis, 0, sorted, 0, N);
         int maxLen = Integer.MIN_VALUE;
         for (String ascii : asciis) {
             maxLen = Math.max(maxLen, ascii.length());
         }
 
-        String[][] buckets = new String[R][asciis.length];
-
+        String[][] buckets = new String[R][N];
+        int[] cnt = new int[R];
         for (int d = maxLen - 1; d >= 0; --d) {
             int n = 0;
-            int[] cnt = new int[R];
             // allocation
-            for (int i = 0; i < sorted.length; ++i) {
+            for (int i = 0; i < N; ++i) {
                 int curChar = d < sorted[i].length() ? (int) sorted[i].charAt(d) : 0;
                 buckets[curChar][cnt[curChar]++] = sorted[i];
             }
@@ -42,6 +42,7 @@ public class RadixSort {
                 for (int k = 0; k < cnt[j]; ++k) {
                     sorted[n++] = buckets[j][k];
                 }
+                cnt[j] = 0;
             }
         }
         return sorted;
