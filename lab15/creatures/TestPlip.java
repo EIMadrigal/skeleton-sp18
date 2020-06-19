@@ -10,7 +10,7 @@ import huglife.Impassible;
 import huglife.Empty;
 
 /** Tests the plip class   
- *  @authr FIXME
+ *  @authr EIMadrigal
  */
 
 public class TestPlip {
@@ -36,24 +36,22 @@ public class TestPlip {
 
     @Test
     public void testReplicate() {
-
+        Plip p = new Plip(2);
+        // judge the reference
+        assertNotSame(p, p.replicate());
     }
 
-    //@Test
+    @Test
     public void testChoose() {
         Plip p = new Plip(1.2);
         HashMap<Direction, Occupant> surrounded = new HashMap<Direction, Occupant>();
         surrounded.put(Direction.TOP, new Impassible());
         surrounded.put(Direction.BOTTOM, new Impassible());
         surrounded.put(Direction.LEFT, new Impassible());
-        surrounded.put(Direction.RIGHT, new Impassible());
-
-        //You can create new empties with new Empty();
-        //Despite what the spec says, you cannot test for Cloruses nearby yet.
-        //Sorry!  
+        surrounded.put(Direction.RIGHT, new Empty());
 
         Action actual = p.chooseAction(surrounded);
-        Action expected = new Action(Action.ActionType.STAY);
+        Action expected = new Action(Action.ActionType.REPLICATE, Direction.RIGHT);
 
         assertEquals(expected, actual);
     }
