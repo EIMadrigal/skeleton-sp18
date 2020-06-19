@@ -20,6 +20,7 @@ public class RadixSort {
      */
     public static String[] sort(String[] asciis) {
         String[] sorted = new String[asciis.length];
+        System.arraycopy(asciis, 0, sorted, 0, asciis.length);
         int maxLen = Integer.MIN_VALUE;
         for (String ascii : asciis) {
             maxLen = Math.max(maxLen, ascii.length());
@@ -27,18 +28,17 @@ public class RadixSort {
 
         String[][] buckets = new String[R][asciis.length];
 
-
         for (int d = maxLen - 1; d >= 0; --d) {
             int n = 0;
             int[] cnt = new int[R];
             // allocation
-            for (int i = 0; i < asciis.length; ++i) {
-                int curChar = d < asciis[i].length() ? (int) asciis[i].charAt(d) : 0;
-                buckets[curChar][cnt[curChar]++] = asciis[i];
+            for (int i = 0; i < sorted.length; ++i) {
+                int curChar = d < sorted[i].length() ? (int) sorted[i].charAt(d) : 0;
+                buckets[curChar][cnt[curChar]++] = sorted[i];
             }
 
             // collection
-            for (int j = 0; j < buckets.length; ++j) {
+            for (int j = 0; j < R; ++j) {
                 for (int k = 0; k < cnt[j]; ++k) {
                     sorted[n++] = buckets[j][k];
                 }
@@ -74,7 +74,7 @@ public class RadixSort {
     }
 
     public static void main(String[] args) {
-        String[] asciis = {"a", "abc", "b", "ab"};
+        String[] asciis = {"12", "1"};
         for (String s : sort(asciis)) {
             System.out.println(s);
         }
