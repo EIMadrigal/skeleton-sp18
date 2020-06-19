@@ -1,11 +1,4 @@
-/**
- * Class for doing Radix sort
- *
- * @author Akhil Batra, Alexander Hwang
- *
- */
-public class RadixSort {
-
+public class RadixSortLowSpeed {
     private static final int R = 256;
 
     /**
@@ -21,32 +14,29 @@ public class RadixSort {
     public static String[] sort(String[] asciis) {
         int N = asciis.length;
         String[] sorted = new String[N];
-        String[] tmp = new String[N];
-        System.arraycopy(asciis, 0, tmp, 0, N);
+        System.arraycopy(asciis, 0, sorted, 0, N);
         int maxLen = Integer.MIN_VALUE;
         for (String ascii : asciis) {
             maxLen = Math.max(maxLen, ascii.length());
         }
 
-        // based on counting sort, just count sort every digit
+        String[][] buckets = new String[R][N];
+
         for (int d = maxLen - 1; d >= 0; --d) {
-            int[] cnt = new int[R + 1];
+            int n = 0;
+            int[] cnt = new int[R];
+            // allocation
             for (int i = 0; i < N; ++i) {
-                int curChar = d < tmp[i].length() ? (int) tmp[i].charAt(d) : 0;
-                cnt[curChar]++;
+                int curChar = d < sorted[i].length() ? (int) sorted[i].charAt(d) : 0;
+                buckets[curChar][cnt[curChar]++] = sorted[i];
             }
 
+            // collection
             for (int j = 0; j < R; ++j) {
-                cnt[j + 1] += cnt[j];
+                for (int k = 0; k < cnt[j]; ++k) {
+                    sorted[n++] = buckets[j][k];
+                }
             }
-
-            for (int k = N - 1; k >= 0; --k) {
-                int curChar = d < tmp[k].length() ? (int) tmp[k].charAt(d) : 0;
-                sorted[cnt[curChar] - 1] = tmp[k];
-                cnt[curChar]--;
-            }
-
-            tmp = sorted.clone();
         }
         return sorted;
     }
@@ -78,7 +68,7 @@ public class RadixSort {
     }
 
     public static void main(String[] args) {
-        String[] asciis = {"ab", "a", "bc"};
+        String[] asciis = {"12", "1"};
         for (String s : sort(asciis)) {
             System.out.println(s);
         }
