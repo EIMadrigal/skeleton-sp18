@@ -64,55 +64,6 @@ public class Percolation {
                 antiBackwash.union(xyto1D(nextrow, nextcol), xyto1D(row, col));
             }
         }
-/*
-        if (index - 1 >= 0 && col - 1 >= 0 && isOpen(row, col - 1)) {
-            if (isFull(row, col - 1)) {
-                UF.union(virtualTop, index);
-                UF.union(virtualTop, index - 1);
-
-                antiBackwash.union(virtualTop, index);
-                antiBackwash.union(virtualTop, index - 1);
-            } else {
-                UF.union(index, index - 1);
-                antiBackwash.union(index, index - 1);
-            }
-        }
-        if (index + 1 < N * N && col + 1 < N && isOpen(row, col + 1)) {
-            if (isFull(row, col + 1)) {
-                UF.union(virtualTop, index);
-                UF.union(virtualTop, index + 1);
-
-                antiBackwash.union(virtualTop, index);
-                antiBackwash.union(virtualTop, index + 1);
-            } else {
-                UF.union(index, index + 1);
-                antiBackwash.union(index, index + 1);
-            }
-        }
-        if (index - N >= 0 && row - 1 >= 0 && isOpen(row - 1, col)) {
-            if (isFull(row - 1, col)) {
-                UF.union(virtualTop, index);
-                UF.union(virtualTop, index - N);
-
-                antiBackwash.union(virtualTop, index);
-                antiBackwash.union(virtualTop, index - N);
-            } else {
-                UF.union(index, index - N);
-                antiBackwash.union(index, index - N);
-            }
-        }
-        if (index + N < N * N && row + 1 < N && isOpen(row + 1, col)) {
-            if (isFull(row + 1, col)) {
-                UF.union(virtualTop, index);
-                UF.union(virtualTop, index + N);
-
-                antiBackwash.union(virtualTop, index);
-                antiBackwash.union(virtualTop, index + N);
-            } else {
-                UF.union(index, index + N);
-                antiBackwash.union(index, index + N);
-            }
-        }*/
     }
 
     private boolean validate(int row, int col) {
@@ -136,7 +87,7 @@ public class Percolation {
         if (!validate(row, col)) {
             throw new IndexOutOfBoundsException("out of bound.");
         }
-        
+
         return isOpen(row, col) && antiBackwash.connected(virtualTop, xyto1D(row, col));
 
         /* wrong avoid backwash
