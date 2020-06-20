@@ -98,21 +98,18 @@ public class Plip extends Creature {
         List<Direction> empties = getNeighborsOfType(neighbors, "empty");
         if (empties.size() > 0) {
             if (this.energy > 1.0) {
-                replicate();
                 Direction moveDir = HugLifeUtils.randomEntry(empties);
                 return new Action(Action.ActionType.REPLICATE, moveDir);
             }
             for (Direction neighbor : neighbors.keySet()) {
                 if (neighbors.get(neighbor).name().equals("clorus")) {
                     if (HugLifeUtils.random() < moveProbability) {
-                        move();
                         Direction moveDir = HugLifeUtils.randomEntry(empties);
                         return new Action(Action.ActionType.MOVE, moveDir);
                     }
                 }
             }
         }
-        stay();
         return new Action(Action.ActionType.STAY);
     }
 }

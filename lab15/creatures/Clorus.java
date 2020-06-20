@@ -61,22 +61,17 @@ public class Clorus extends Creature {
             for (Direction neighbor : neighbors.keySet()) {
                 Occupant occupant = neighbors.get(neighbor);
                 if (occupant.name().equals("plip")) {
-                    attack((Creature) occupant);
                     Direction moveDir = HugLifeUtils.randomEntry(plips);
                     return new Action(Action.ActionType.ATTACK, moveDir);
                 } else if (this.energy >= 1.0) {
-                    replicate();
                     Direction moveDir = HugLifeUtils.randomEntry(empties);
                     return new Action(Action.ActionType.REPLICATE, moveDir);
                 } else {
-                    move();
                     Direction moveDir = HugLifeUtils.randomEntry(empties);
                     return new Action(Action.ActionType.MOVE, moveDir);
                 }
             }
         }
-
-        stay();
         return new Action(Action.ActionType.STAY);
     }
 }
