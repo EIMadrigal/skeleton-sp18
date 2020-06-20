@@ -7,6 +7,7 @@ public class SeamCarver {
     private Picture picture;
     private int width;
     private int height;
+    private boolean isVertical = true;
 
     public SeamCarver(Picture picture) {
         this.picture = new Picture(picture);
@@ -28,10 +29,7 @@ public class SeamCarver {
     }
 
     private boolean inBound(int x, int y) {
-        if (x < 0 || y < 0 || x >= width || y >= height) {
-            return false;
-        }
-        return true;
+        return x >= 0 && y >= 0 && x < width && y < height;
     }
 
     // energy of pixel at column x and row y
@@ -39,19 +37,26 @@ public class SeamCarver {
         if (!inBound(x, y)) {
             throw new java.lang.IndexOutOfBoundsException("Index is illegal.");
         }
+
         Color colorLeft = picture.get((x - 1 + width) % width, y);
         Color colorRight = picture.get((x + 1) % width, y);
+        Color colorUp = picture.get(x, (y - 1 + height) % height);
+        Color colorBottom = picture.get(x, (y + 1) % height);
+
         int rx = Math.abs(colorLeft.getRed() - colorRight.getRed());
         int gx = Math.abs(colorLeft.getGreen() - colorRight.getGreen());
         int bx = Math.abs(colorLeft.getBlue() - colorRight.getBlue());
-
-        Color colorUp = picture.get(x, (y - 1 + height) % height);
-        Color colorBottom = picture.get(x, (y + 1) % height);
         int ry = Math.abs(colorUp.getRed() - colorBottom.getRed());
         int gy = Math.abs(colorUp.getGreen() - colorBottom.getGreen());
         int by = Math.abs(colorUp.getBlue() - colorBottom.getBlue());
 
         return rx * rx + gx * gx + bx * bx + ry * ry + gy * gy + by * by;
+    }
+
+    private void swap() {
+        int tmp = width;
+        width = height;
+        height = tmp;
     }
 
     // sequence of indices for horizontal seam
@@ -68,12 +73,16 @@ public class SeamCarver {
         picture = transPic;
         transPic = tmp;
 
+        isVertical = false;
+        swap();
         int[] seq = findVerticalSeam();
 
         tmp = picture;
         picture = transPic;
         transPic = tmp;
 
+        isVertical = true;
+        swap();
         return seq;
     }
 
@@ -91,10 +100,11 @@ public class SeamCarver {
         for (int j = 0; j < height; ++j) {
             for (int i = 1; i <= width; ++i) {
                 if (j == 0) {
-                    M[i][j] = energy(i - 1,j);
+                    M[i][j] = energy(i - 1, j);
                     continue;
                 }
-                M[i][j] = energy(i - 1, j) + Math.min(M[i + 1][j - 1], Math.min(M[i - 1][j - 1], M[i][j - 1]));
+                M[i][j] = energy(i - 1, j) + Math.min(M[i + 1][j - 1],
+                        Math.min(M[i - 1][j - 1], M[i][j - 1]));
             }
         }
 
