@@ -12,8 +12,8 @@ public class Boggle {
     private static char[][] board;
     private static int[] dx = new int[]{-1, -1, 0, 1, 1, 1, 0, -1};
     private static int[] dy = new int[]{0, 1, 1, 1, 0, -1, -1, -1};
-    private static Trie trie = new Trie();;
-    private static TreeSet<String> ans = new TreeSet<>(new CompareByLen());
+    private static Trie trie;
+    private static TreeSet<String> ans;
 
     private static class CompareByLen implements Comparator<String> {
         @Override
@@ -40,10 +40,12 @@ public class Boggle {
         }
 
         In in = new In(dictPath);
+        trie = new Trie();
         while (in.hasNextLine()) {
             trie.insert(in.readLine());
         }
 
+        ans = new TreeSet<>(new CompareByLen());
         boolean[][] vis = new boolean[board.length][board[0].length];
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board[0].length; ++j) {
@@ -104,10 +106,9 @@ public class Boggle {
         return true;
     }
 
-    /*
     public static void main(String[] args) {
         for (String s : solve(20, "exampleBoard2.txt")) {
             System.out.println(s);
         }
-    } */
+    }
 }
