@@ -8,7 +8,7 @@ import edu.princeton.cs.introcs.In;
 public class Boggle {
 
     // File path of dictionary file
-    static String dictPath = "trivial_words.txt";
+    static String dictPath = "words.txt";
     private static char[][] board;
     private static int[] dx = new int[]{-1, -1, 0, 1, 1, 1, 0, -1};
     private static int[] dy = new int[]{0, 1, 1, 1, 0, -1, -1, -1};
@@ -55,10 +55,9 @@ public class Boggle {
         }
 
         List<String> res = new ArrayList<>();
-        for (String s : ans) {
-            if (res.size() < k) {
-                res.add(s);
-            }
+        while (res.size() < k) {
+            if (!ans.isEmpty())
+                res.add(ans.pollFirst());
         }
 
         return res;
@@ -105,10 +104,10 @@ public class Boggle {
         }
         return true;
     }
-
+/*
     public static void main(String[] args) {
         for (String s : solve(20, "exampleBoard2.txt")) {
             System.out.println(s);
         }
-    }
+    }*/
 }
