@@ -5,7 +5,7 @@
  *
  */
 public class RadixSort {
-    private static final int R = 256;
+    private static final int R = 128;
 
     /**
      * Does LSD radix sort on the passed in array with the following restrictions:
