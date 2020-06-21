@@ -8,7 +8,7 @@ import edu.princeton.cs.introcs.In;
 public class Boggle {
 
     // File path of dictionary file
-    static String dictPath = "words.txt";
+    static String dictPath = "trivial_words.txt";
     private static char[][] board;
     private static int[] dx = new int[]{-1, -1, 0, 1, 1, 1, 0, -1};
     private static int[] dy = new int[]{0, 1, 1, 1, 0, -1, -1, -1};
@@ -80,7 +80,7 @@ public class Boggle {
     }
 
     private static boolean inBound(int x, int y) {
-        return x >= 0 && y >=0 && x < board.length && y < board[0].length;
+        return x >= 0 && y >= 0 && x < board.length && y < board[0].length;
     }
 
     private static boolean isBoardRect(String boardFilePath) {
@@ -104,9 +104,10 @@ public class Boggle {
         return true;
     }
 
+    /*
     public static void main(String[] args) {
-        for (String s : solve(7, "exampleBoard.txt")) {
+        for (String s : solve(20, "exampleBoard2.txt")) {
             System.out.println(s);
         }
-    }
+    } */
 }
