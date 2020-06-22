@@ -100,7 +100,8 @@ public class BitSequence implements Serializable {
         return hashCode;
     }
 
-    /** Returns the bit in the given position. */
+    /** Returns the bit in the given position.
+     * @return*/
     public int bitAt(int position) {
         boolean bit = bits.get(position + firstBitNum);
         if (!bit) {
