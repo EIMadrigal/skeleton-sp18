@@ -28,7 +28,7 @@ public class HuffmanEncoder {
         /** Create a file called .huf that ObjectWriter ow will write to. */
         ObjectWriter ow = new ObjectWriter(args[0] + ".huf");
         // Write the binary decoding trie to the .huf file
-        ow.writeObject(binaryTrie.toString());
+        ow.writeObject(binaryTrie);
 
         // write the number of symbols to the .huf file
         ow.writeObject(freqTable.size());
