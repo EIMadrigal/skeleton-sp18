@@ -31,7 +31,7 @@ public class HuffmanEncoder {
         ow.writeObject(binaryTrie);
 
         // write the number of symbols to the .huf file
-        ow.writeObject(freqTable.size());
+        ow.writeObject(inputSymbols.length);
 
         // Use binary trie to create lookup table for encoding
         Map<Character, BitSequence> lookupTable = binaryTrie.buildLookupTable();
