@@ -56,8 +56,10 @@ public class Boggle {
 
         List<String> res = new ArrayList<>();
         while (res.size() < k) {
-            if (!ans.isEmpty())
-                res.add(ans.pollFirst());
+            if (ans.isEmpty()) {
+                break;
+            }
+            res.add(ans.pollFirst());
         }
 
         return res;
@@ -104,10 +106,10 @@ public class Boggle {
         }
         return true;
     }
-/*
+
     public static void main(String[] args) {
-        for (String s : solve(20, "exampleBoard2.txt")) {
+        for (String s : solve(7, "smallBoard.txt")) {
             System.out.println(s);
         }
-    }*/
+    }
 }
