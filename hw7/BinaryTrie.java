@@ -51,14 +51,15 @@ public class BinaryTrie implements Serializable {
         BitSequence bs = new BitSequence();
         Node cur = root;
         for (int i = 0; i < querySequence.length(); ++i) {
-            if (!cur.isLeaf()) {
-                if (querySequence.bitAt(i) == 1) {
-                    cur = cur.right;
-                } else {
-                    cur = cur.left;
-                }
-                bs = bs.appended(querySequence.bitAt(i));
+            if (cur.isLeaf()) {
+                break;
             }
+            if (querySequence.bitAt(i) == 1) {
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+            bs = bs.appended(querySequence.bitAt(i));
         }
         return new Match(bs, cur.ch);
     }
