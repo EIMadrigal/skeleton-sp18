@@ -26,7 +26,7 @@ public class RadixSort {
         String[] sorted = asciis.clone();
         // based on counting sort, just count sort every digit
         for (int d = maxLen - 1; d >= 0; --d) {
-            sortHelperLSD(sorted, d);
+            sorted = sortHelperLSD(sorted, d);
         }
         return sorted;
     }
@@ -37,7 +37,7 @@ public class RadixSort {
      * @param asciis Input array of Strings
      * @param index The position to sort the Strings on.
      */
-    private static void sortHelperLSD(String[] asciis, int index) {
+    private static String[] sortHelperLSD(String[] asciis, int index) {
         int[] cnt = new int[R];
 
         for (String s : asciis) {
@@ -59,7 +59,7 @@ public class RadixSort {
             sorted[place] = s;
             starts[curChar] += 1;
         }
-        System.arraycopy(sorted, 0, asciis, 0, asciis.length);
+        return sorted;
     }
 
     /**
