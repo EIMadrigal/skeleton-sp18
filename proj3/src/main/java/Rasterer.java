@@ -9,8 +9,22 @@ import java.util.Map;
  */
 public class Rasterer {
 
+    private static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
+            ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
+    /** Each tile is 256x256 pixels. */
+    private static final int TILE_SIZE = 256;
+
+    /** Depth 0's image's LonDPP */
+    private double tile0LonDPP;
+    private double tile0LatDPP;
+
+    /** The depth of image we should use. */
+    private int depth;
+
     public Rasterer() {
-        // YOUR CODE HERE
+        tile0LonDPP = (ROOT_LRLON - ROOT_ULLON) / TILE_SIZE;
+        tile0LatDPP = (ROOT_ULLAT - ROOT_LRLAT) / TILE_SIZE;
+        depth = 0;
     }
 
     /**
@@ -42,11 +56,45 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
+
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+
+        /** corner cases */
+        if (params.get("ullon") < ROOT_ULLON || params.get("ullat") > ROOT_ULLAT ||
+            params.get("lrlon") > ROOT_LRLON || params.get("lrlat") < ROOT_LRLAT) {
+            results.put("query_success", false);
+            return results;
+        }
+
+        double queryLonDPP = (params.get("lrlon") - params.get("ullon")) / params.get("w");
+        double tileiLonDPP = tile0LonDPP;
+        double tileiLatDPP = tile0LatDPP;
+        for (depth = 0; depth < 7 && tileiLonDPP > queryLonDPP; ++depth) {
+            tileiLonDPP /= 2.0;
+            tileiLatDPP /= 2.0;
+        }
+
+        int startX = (int) ((params.get("ullon") - ROOT_ULLON) / (tileiLonDPP * TILE_SIZE));
+        int endX = (int) ((params.get("lrlon") - ROOT_ULLON) / (tileiLonDPP * TILE_SIZE));
+        int startY = (int) ((ROOT_ULLAT - params.get("ullat")) / (tileiLatDPP * TILE_SIZE));
+        int endY = (int) ((ROOT_ULLAT - params.get("lrlat")) / (tileiLatDPP * TILE_SIZE));
+
+        String[][] renderGrid = new String[endY - startY + 1][endX - startX + 1];
+
+        for (int i = 0; i <= endY - startY; ++i) {
+            for (int j = 0; j <= endX - startX; ++j) {
+                renderGrid[i][j] = "d" + depth + "_x" + (j + startX) + "_y" + (i + startY) + ".png";
+            }
+        }
+
+        results.put("render_grid", renderGrid);
+        results.put("raster_ul_lon", ROOT_ULLON + startX * (tileiLonDPP * TILE_SIZE));
+        results.put("raster_ul_lat", ROOT_ULLAT - startY * (tileiLatDPP * TILE_SIZE));
+        results.put("raster_lr_lon", ROOT_ULLON + (endX + 1) * (tileiLonDPP * TILE_SIZE));
+        results.put("raster_lr_lat", ROOT_ULLAT - (endY + 1) * (tileiLatDPP * TILE_SIZE));
+        results.put("depth", depth);
+        results.put("query_success", true);
+
         return results;
     }
-
 }
