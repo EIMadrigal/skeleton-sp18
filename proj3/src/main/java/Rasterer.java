@@ -60,8 +60,8 @@ public class Rasterer {
         Map<String, Object> results = new HashMap<>();
 
         /** corner cases */
-        if (params.get("ullon") < ROOT_ULLON || params.get("ullat") > ROOT_ULLAT ||
-            params.get("lrlon") > ROOT_LRLON || params.get("lrlat") < ROOT_LRLAT) {
+        if (params.get("ullon") < ROOT_ULLON || params.get("ullat") > ROOT_ULLAT
+                || params.get("lrlon") > ROOT_LRLON || params.get("lrlat") < ROOT_LRLAT) {
             results.put("query_success", false);
             return results;
         }
