@@ -1,4 +1,3 @@
-import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Stack;
 import java.util.Map;
@@ -56,7 +55,9 @@ public class AStarSolver {
                 }
             }
             curNode = pq.poll();
-            visited.add(curNode.node.id);
+            if (curNode != null) {
+                visited.add(curNode.node.id);
+            }
         }
 
         for (AugmentNode n = curNode; n != null; n = n.prev) {
