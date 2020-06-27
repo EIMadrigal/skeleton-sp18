@@ -76,9 +76,6 @@ public class GraphBuildingHandler extends DefaultHandler {
         if (qName.equals("node")) {
             /* We encountered a new <node...> tag. */
             activeState = "node";
-            System.out.println("Node id: " + attributes.getValue("id"));
-            System.out.println("Node lon: " + attributes.getValue("lon"));
-            System.out.println("Node lat: " + attributes.getValue("lat"));
 
             long id = Long.parseLong(attributes.getValue("id"));
             double lon = Double.parseDouble(attributes.getValue("lon"));
@@ -87,10 +84,8 @@ public class GraphBuildingHandler extends DefaultHandler {
         } else if (qName.equals("way")) {
             /* We encountered a new <way...> tag. */
             activeState = "way";
-            System.out.println("Beginning a way...");
         } else if (activeState.equals("way") && qName.equals("nd")) {
             /* While looking at a way, we found a <nd...> tag. */
-            System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
 
             /* Use the above id to make "possible" connections between the nodes in this way */
             /* Not all ways are valid. So, directly connecting the nodes here would be
@@ -105,18 +100,18 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                System.out.println("Max Speed: " + v);
+
                 /* set the max speed of the "current way" here. */
                 maxSpeed = v;
             } else if (k.equals("highway")) {
-                System.out.println("Highway type: " + v);
+
                 /* Figure out whether this way and its connections are valid. */
                 wayValid = ALLOWED_HIGHWAY_TYPES.contains(v);
             } else if (k.equals("name")) {
                 wayName = v;
-                System.out.println("Way Name: " + v);
+
             }
-            System.out.println("Tag with k=" + k + ", v=" + v + ".");
+
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {
             /* While looking at a node, we found a <tag...> with k="name". */
@@ -124,9 +119,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             /* Since we found this <tag...> INSIDE a node, we should probably remember which
             node this tag belongs to. Remember XML is parsed top-to-bottom, so probably it's the
             last node that you looked at (check the first if-case). */
-
             curNode.name = attributes.getValue("v");
-            System.out.println("Node's name: " + attributes.getValue("v"));
         }
     }
 

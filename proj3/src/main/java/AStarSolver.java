@@ -1,4 +1,10 @@
-import java.util.*;
+import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.Stack;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 public class AStarSolver {
     private static PriorityQueue<AugmentNode> pq = new PriorityQueue<>();
@@ -14,11 +20,12 @@ public class AStarSolver {
 
         private double disToCur;
         private double estimateDis;
-        private int priority;
+        private double priority;
 
         @Override
         public int compareTo(AugmentNode n) {
-            return this.priority - n.priority;
+            //return (int) (this.priority - n.priority);
+            return Double.compare(this.priority, n.priority);
         }
 
         private AugmentNode(GraphDB.Node node, double disToCur, AugmentNode prev, GraphDB.Node goal) {
@@ -30,7 +37,7 @@ public class AStarSolver {
             } else {
                 this.estimateDis = GraphDB.distance(node.lon, node.lat, goal.lon, goal.lat);
             }
-            this.priority = (int) (this.estimateDis + disToCur);
+            this.priority = this.estimateDis + disToCur;
         }
     }
 
