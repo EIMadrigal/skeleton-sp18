@@ -28,7 +28,7 @@ public class Router {
                                           double destlon, double destlat) {
         long start = g.closest(stlon, stlat);
         long des = g.closest(destlon, destlat);
-        //long cur = start;
+
         AStarSolver solver = new AStarSolver(g, new GraphDB.Node(start, g.lon(start), g.lat(start)), new GraphDB.Node(des, g.lon(des), g.lat(des)));
 
         List<Long> shortestPath = new ArrayList<>(solver.solution());

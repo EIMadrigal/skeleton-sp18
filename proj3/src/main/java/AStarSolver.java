@@ -1,12 +1,11 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Stack;
+import java.util.*;
 
 public class AStarSolver {
     private static PriorityQueue<AugmentNode> pq = new PriorityQueue<>();
     private Stack<Long> path = new Stack<>();
     private Map<GraphDB.Node, Double> estimateDisCach = new HashMap<>();
+
+    Set<Long> visited = new HashSet<>();
 
     private class AugmentNode implements Comparable<AugmentNode> {
 
@@ -41,12 +40,16 @@ public class AStarSolver {
         while (curNode.node.id != goal.id) {
             for (long neighbor : g.adjacent(curNode.node.id)) {
                 GraphDB.Node n = g.vertex.get(neighbor);
+                if (visited.contains(n.id)) {
+                    continue;
+                }
                 if (curNode.prev == null || n.id != curNode.prev.node.id) {
                     AugmentNode node = new AugmentNode(n, curNode.disToCur + g.distance(curNode.node.id, n.id), curNode, goal);
                     pq.add(node);
                 }
             }
             curNode = pq.poll();
+            visited.add(curNode.node.id);
         }
 
         for (AugmentNode n = curNode; n != null; n = n.prev) {

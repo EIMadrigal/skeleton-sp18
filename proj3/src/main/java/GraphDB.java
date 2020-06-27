@@ -112,7 +112,7 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        return adj.keySet();
+        return vertex.keySet();
     }
 
     /**
