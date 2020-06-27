@@ -14,16 +14,17 @@ public class AStarSolver {
 
     private class AugmentNode implements Comparable<AugmentNode> {
 
-        private GraphDB.Node node;
+        //private long id;
         private AugmentNode prev;
-
-        private double disToCur;
-        private double estimateDis;
         private double priority;
+        private double disToCur;
+
+        private GraphDB.Node node;
+
+        private double estimateDis;
 
         @Override
         public int compareTo(AugmentNode n) {
-            //return (int) (this.priority - n.priority);
             return Double.compare(this.priority, n.priority);
         }
 
@@ -43,6 +44,7 @@ public class AStarSolver {
     public AStarSolver(GraphDB g, GraphDB.Node initial, GraphDB.Node goal) {
 
         AugmentNode curNode = new AugmentNode(initial, 0, null, goal);
+
         while (curNode.node.id != goal.id) {
             for (long neighbor : g.adjacent(curNode.node.id)) {
                 GraphDB.Node n = g.vertex.get(neighbor);
@@ -54,8 +56,8 @@ public class AStarSolver {
                     pq.add(node);
                 }
             }
-            curNode = pq.poll();
-            if (curNode != null) {
+            if (pq.size() != 0) {
+                curNode = pq.poll();
                 visited.add(curNode.node.id);
             }
         }
