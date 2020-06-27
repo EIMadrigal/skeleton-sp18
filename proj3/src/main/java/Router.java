@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +11,7 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -23,9 +23,19 @@ public class Router {
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
+
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        long start = g.closest(stlon, stlat);
+        long des = g.closest(destlon, destlat);
+        //long cur = start;
+        AStarSolver solver = new AStarSolver(g, new GraphDB.Node(start, g.lon(start), g.lat(start)), new GraphDB.Node(des, g.lon(des), g.lat(des)));
+
+        List<Long> shortestPath = new ArrayList<>(solver.solution());
+
+        Collections.reverse(shortestPath);
+
+        return shortestPath;
     }
 
     /**
@@ -33,13 +43,12 @@ public class Router {
      * @param g The graph to use.
      * @param route The route to translate into directions. Each element
      *              corresponds to a node from the graph in the route.
-     * @return A list of NavigatiionDirection objects corresponding to the input
+     * @return A list of NavigationDirection objects corresponding to the input
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         return null; // FIXME
     }
-
 
     /**
      * Class to represent a navigation direction, which consists of 3 attributes:

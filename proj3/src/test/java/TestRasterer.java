@@ -25,7 +25,6 @@ public class TestRasterer {
     private static final int NUM_TESTS = 8;
     private static Rasterer rasterer;
 
-
     @Before
     public void setUp() throws Exception {
         rasterer = new Rasterer();
