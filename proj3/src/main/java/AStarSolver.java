@@ -44,7 +44,26 @@ public class AStarSolver {
     public AStarSolver(GraphDB g, GraphDB.Node initial, GraphDB.Node goal) {
 
         AugmentNode curNode = new AugmentNode(initial, 0, null, goal);
+        pq.add(curNode);
 
+        while (pq.size() != 0) {
+            if (curNode.node.id == goal.id) {
+                break;
+            }
+            curNode = pq.poll();
+            visited.add(curNode.node.id);
+            for (long neighbor : g.adjacent(curNode.node.id)) {
+                GraphDB.Node n = g.vertex.get(neighbor);
+                if (visited.contains(n.id)) {
+                    continue;
+                }
+                if (curNode.prev == null || n.id != curNode.prev.node.id) {
+                    AugmentNode node = new AugmentNode(n, curNode.disToCur + g.distance(curNode.node.id, n.id), curNode, goal);
+                    pq.add(node);
+                }
+            }
+        }
+/*
         while (curNode.node.id != goal.id) {
             for (long neighbor : g.adjacent(curNode.node.id)) {
                 GraphDB.Node n = g.vertex.get(neighbor);
@@ -60,10 +79,12 @@ public class AStarSolver {
                 curNode = pq.poll();
                 visited.add(curNode.node.id);
             }
-        }
+        }*/
 
-        for (AugmentNode n = curNode; n != null; n = n.prev) {
-            path.push(n.node.id);
+        if (curNode.node.id == goal.id) {
+            for (AugmentNode n = curNode; n != null; n = n.prev) {
+                path.push(n.node.id);
+            }
         }
     }
 
