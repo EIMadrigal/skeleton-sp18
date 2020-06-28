@@ -43,9 +43,7 @@ public class Router {
         }
 
         List<Long> shortestPath = new ArrayList<>(solver.solution());
-
         Collections.reverse(shortestPath);
-
         return shortestPath;
     }
 

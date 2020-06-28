@@ -32,11 +32,6 @@ public class GraphDB {
         protected double lat;
         protected String name;
 
-        protected Node(double lon, double lat) {
-            this.lon = lon;
-            this.lat = lat;
-        }
-
         protected Node(long id, double lon, double lat) {
             this.id = id;
             this.lon = lon;
@@ -44,7 +39,7 @@ public class GraphDB {
         }
     }
 
-    protected static class Edge {
+    private static class Edge {
         private long fromID;
         private long toID;
         private double weight;
@@ -57,8 +52,8 @@ public class GraphDB {
         }
     }
 
-    protected Map<Long, Node> vertex = new HashMap<>();
-    private Map<Long, Set<Edge>> adj = new HashMap<>(); // node id -> neighbor edges
+    Map<Long, Node> vertex = new HashMap<>();
+    Map<Long, Set<Edge>> adj = new HashMap<>(); // node id -> neighbor edges
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -141,15 +136,9 @@ public class GraphDB {
      * @param w The id of the second vertex.
      * @return The great-circle distance between the two locations from the graph.
      */
-    protected double distance(long v, long w) {
+    double distance(long v, long w) {
         return distance(lon(v), lat(v), lon(w), lat(w));
     }
-
-    /*public double estimateDis(long v, long w) {
-        Node vNode = vertex.get(v);
-        Node wNode = vert
-        return distance()
-    } */
 
     static double distance(double lonV, double latV, double lonW, double latW) {
         double phi1 = Math.toRadians(latV);
