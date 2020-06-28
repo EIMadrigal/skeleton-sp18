@@ -1,4 +1,8 @@
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +33,8 @@ public class Router {
         long start = g.closest(stlon, stlat);
         long des = g.closest(destlon, destlat);
 
-        AStarSolver solver = new AStarSolver(g, new GraphDB.Node(start, g.lon(start), g.lat(start)), new GraphDB.Node(des, g.lon(des), g.lat(des)));
+        AStarSolver solver = new AStarSolver(g, new GraphDB.Node(start, g.lon(start),
+                g.lat(start)), new GraphDB.Node(des, g.lon(des), g.lat(des)));
 
         Stack<Long> sol = solver.solution();
 
