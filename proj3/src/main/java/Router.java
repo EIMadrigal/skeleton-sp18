@@ -31,6 +31,12 @@ public class Router {
 
         AStarSolver solver = new AStarSolver(g, new GraphDB.Node(start, g.lon(start), g.lat(start)), new GraphDB.Node(des, g.lon(des), g.lat(des)));
 
+        Stack<Long> sol = solver.solution();
+
+        if (sol == null || sol.empty()) {
+            return new ArrayList<>();
+        }
+
         List<Long> shortestPath = new ArrayList<>(solver.solution());
 
         Collections.reverse(shortestPath);

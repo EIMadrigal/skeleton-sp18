@@ -28,7 +28,8 @@ public class AStarSolver {
             return Double.compare(this.priority, n.priority);
         }
 
-        private AugmentNode(GraphDB.Node node, double disToCur, AugmentNode prev, GraphDB.Node goal) {
+        private AugmentNode(GraphDB.Node node, double disToCur,
+                            AugmentNode prev, GraphDB.Node goal) {
             this.disToCur = disToCur;
             this.node = node;
             this.prev = prev;
@@ -58,7 +59,8 @@ public class AStarSolver {
                     continue;
                 }
                 if (curNode.prev == null || n.id != curNode.prev.node.id) {
-                    AugmentNode node = new AugmentNode(n, curNode.disToCur + g.distance(curNode.node.id, n.id), curNode, goal);
+                    AugmentNode node = new AugmentNode(n, curNode.disToCur
+                            + g.distance(curNode.node.id, n.id), curNode, goal);
                     pq.add(node);
                 }
             }
@@ -71,7 +73,8 @@ public class AStarSolver {
                     continue;
                 }
                 if (curNode.prev == null || n.id != curNode.prev.node.id) {
-                    AugmentNode node = new AugmentNode(n, curNode.disToCur + g.distance(curNode.node.id, n.id), curNode, goal);
+                    AugmentNode node = new AugmentNode(n, curNode.disToCur
+                        + g.distance(curNode.node.id, n.id), curNode, goal);
                     pq.add(node);
                 }
             }

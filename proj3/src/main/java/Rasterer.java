@@ -56,7 +56,8 @@ public class Rasterer {
 
         /** corner cases */
         if (params.get("ullon") < MapServer.ROOT_ULLON || params.get("ullat") > MapServer.ROOT_ULLAT
-                || params.get("lrlon") > MapServer.ROOT_LRLON || params.get("lrlat") < MapServer.ROOT_LRLAT) {
+                || params.get("lrlon") > MapServer.ROOT_LRLON
+                || params.get("lrlat") < MapServer.ROOT_LRLAT) {
             results.put("query_success", false);
             return results;
         }
@@ -69,10 +70,14 @@ public class Rasterer {
             tileiLatDPP /= 2.0;
         }
 
-        int startX = (int) ((params.get("ullon") - MapServer.ROOT_ULLON) / (tileiLonDPP * MapServer.TILE_SIZE));
-        int endX = (int) ((params.get("lrlon") - MapServer.ROOT_ULLON) / (tileiLonDPP * MapServer.TILE_SIZE));
-        int startY = (int) ((MapServer.ROOT_ULLAT - params.get("ullat")) / (tileiLatDPP * MapServer.TILE_SIZE));
-        int endY = (int) ((MapServer.ROOT_ULLAT - params.get("lrlat")) / (tileiLatDPP * MapServer.TILE_SIZE));
+        int startX = (int) ((params.get("ullon") - MapServer.ROOT_ULLON)
+                / (tileiLonDPP * MapServer.TILE_SIZE));
+        int endX = (int) ((params.get("lrlon") - MapServer.ROOT_ULLON)
+                / (tileiLonDPP * MapServer.TILE_SIZE));
+        int startY = (int) ((MapServer.ROOT_ULLAT - params.get("ullat"))
+                / (tileiLatDPP * MapServer.TILE_SIZE));
+        int endY = (int) ((MapServer.ROOT_ULLAT - params.get("lrlat"))
+                / (tileiLatDPP * MapServer.TILE_SIZE));
 
         String[][] renderGrid = new String[endY - startY + 1][endX - startX + 1];
 
@@ -83,10 +88,14 @@ public class Rasterer {
         }
 
         results.put("render_grid", renderGrid);
-        results.put("raster_ul_lon", MapServer.ROOT_ULLON + startX * (tileiLonDPP * MapServer.TILE_SIZE));
-        results.put("raster_ul_lat", MapServer.ROOT_ULLAT - startY * (tileiLatDPP * MapServer.TILE_SIZE));
-        results.put("raster_lr_lon", MapServer.ROOT_ULLON + (endX + 1) * (tileiLonDPP * MapServer.TILE_SIZE));
-        results.put("raster_lr_lat", MapServer.ROOT_ULLAT - (endY + 1) * (tileiLatDPP * MapServer.TILE_SIZE));
+        results.put("raster_ul_lon", MapServer.ROOT_ULLON
+                + startX * (tileiLonDPP * MapServer.TILE_SIZE));
+        results.put("raster_ul_lat", MapServer.ROOT_ULLAT
+                - startY * (tileiLatDPP * MapServer.TILE_SIZE));
+        results.put("raster_lr_lon", MapServer.ROOT_ULLON
+                + (endX + 1) * (tileiLonDPP * MapServer.TILE_SIZE));
+        results.put("raster_lr_lat", MapServer.ROOT_ULLAT
+                - (endY + 1) * (tileiLatDPP * MapServer.TILE_SIZE));
         results.put("depth", depth);
         results.put("query_success", true);
 
