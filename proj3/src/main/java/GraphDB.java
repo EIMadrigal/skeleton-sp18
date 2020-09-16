@@ -49,7 +49,6 @@ public class GraphDB {
             this.fromID = fromID;
             this.toID = toID;
             this.name = name;
-            this.weight = 0;
         }
     }
 
