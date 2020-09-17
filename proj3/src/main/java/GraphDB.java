@@ -74,15 +74,18 @@ public class GraphDB {
 
 
 
-            // insert all node names into the Trie
-            for (GraphDB.Node node : this.vertex.values()) {
-                trie.insert(node.name, node.id, node.lat, node.lon);
-            }
+            
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
+        // insert all node names into the Trie
+            for (GraphDB.Node node : this.vertex.values()) {
+                trie.insert(node.name, node.id, node.lat, node.lon);
+            }
+        
+        
         clean();
     }
 
