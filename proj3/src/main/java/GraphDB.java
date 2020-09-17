@@ -54,6 +54,7 @@ public class GraphDB {
 
     Map<Long, Node> vertex = new HashMap<>();
     Map<Long, Set<Edge>> adj = new HashMap<>(); // node id -> neighbor edges
+    private static Trie trie = new Trie();
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -70,6 +71,14 @@ public class GraphDB {
             SAXParser saxParser = factory.newSAXParser();
             GraphBuildingHandler gbh = new GraphBuildingHandler(this);
             saxParser.parse(inputStream, gbh);
+
+
+
+            // insert all node names into the Trie
+            for (GraphDB.Node node : this.vertex.values()) {
+                trie.insert(node.name, node.id, node.lat, node.lon);
+            }
+
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
@@ -232,5 +241,40 @@ public class GraphDB {
             edges.add(edge);
             adj.put(fromID, edges);
         }
+    }
+
+
+
+    public static List<String> getLocationsByPrefix(String prefix) {
+        List<String> locations = new ArrayList<>();
+        // do not need to iterate all the node, just go through the trie, O(k)
+        Trie.TrieNode node = trie.startsWith(prefix);
+        if (node == null) {
+            return locations;
+        }
+        else {
+            dfs(node, prefix, "", locations);
+        }
+
+        return locations;
+    }
+
+    public static void dfs(Trie.TrieNode node, String prefix, String cur, List<String> ans) {
+        if (node == null) {
+            ans.add(prefix + cur);
+            return;
+        }
+        for (Map.Entry<Character, Trie.TrieNode> entry : node.children.entrySet()) {
+            dfs(entry.getValue(), prefix, cur + entry.getKey(), ans);
+        }
+    }
+
+    public static List<Map<String, Object>> getLocations(String locationName) {
+        // O(k) do not iterate all the node
+        List<Map<String, Object>> ans = new ArrayList<>();
+        if (trie.search(locationName)) {
+            return trie.startsWith(locationName).extraInfo;
+        }
+        return ans;
     }
 }
