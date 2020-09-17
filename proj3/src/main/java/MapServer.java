@@ -89,22 +89,16 @@ public class MapServer {
     public static void initialize() {
         graph = new GraphDB(OSM_DB_PATH);
         rasterer = new Rasterer();
-
+/*
         trie = new Trie();
         // insert all node names into the Trie
         for (GraphDB.Node node : graph.vertex.values()) {
             trie.insert(node.name, node.id, node.lat, node.lon);
-        }
+        }*/
     }
 
     public static void main(String[] args) {
-
-
         initialize();
-
-
-
-
         staticFileLocation("/page");
         /* Allow for all origin requests (since this is not an authenticated server, we do not
          * care about CSRF).  */
@@ -117,6 +111,7 @@ public class MapServer {
         /* Define the raster endpoint for HTTP GET requests. I use anonymous functions to define
          * the request handlers. */
         get("/raster", (req, res) -> {
+
             HashMap<String, Double> params =
                     getRequestParams(req, REQUIRED_RASTER_REQUEST_PARAMS);
             /* The png image is written to the ByteArrayOutputStream */
@@ -136,9 +131,6 @@ public class MapServer {
             Gson gson = new Gson();
             return gson.toJson(rasteredImgParams);
         });
-
-
-
 
 
         /* Define the routing endpoint for HTTP GET requests. */
@@ -189,7 +181,7 @@ public class MapServer {
         });
 
 
-        System.out.println("hello");
+        //System.out.println("hello");
     }
 
     /**
@@ -308,13 +300,13 @@ public class MapServer {
     public static List<String> getLocationsByPrefix(String prefix) {
         List<String> locations = new ArrayList<>();
         // do not need to iterate all the node, just go through the trie, O(k)
-        Trie.TrieNode node = trie.startsWith(prefix);
+   /*     Trie.TrieNode node = trie.startsWith(prefix);
         if (node == null) {
             return locations;
         }
         else {
             dfs(node, prefix, "", locations);
-        }
+        }*/
 
         return locations;
     }
@@ -345,9 +337,9 @@ public class MapServer {
     public static List<Map<String, Object>> getLocations(String locationName) {
         // O(k) do not iterate all the node
         List<Map<String, Object>> ans = new ArrayList<>();
-        if (trie.search(locationName)) {
+       /* if (trie.search(locationName)) {
             return trie.startsWith(locationName).extraInfo;
-        }
+        }*/
         return ans;
     }
 
