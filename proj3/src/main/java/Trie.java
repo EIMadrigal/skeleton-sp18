@@ -23,7 +23,6 @@ public class Trie {
         private long id;*/
     }
 
-
     public Trie() {
         root = new TrieNode();
     }
@@ -31,6 +30,14 @@ public class Trie {
     public void insert(String word, long id, double lat, double lon) {
         if (word == null)
             return;
+
+        Map<String, Object> m = new HashMap<>();
+        m.put("name", word);
+        m.put("ID", id);
+        m.put("lat", lat);
+        m.put("lon", lon);
+
+        word = GraphDB.cleanString(word);
         TrieNode node = root;
         for (char c : word.toCharArray()) {
             if (!node.children.containsKey(c)) {
@@ -44,12 +51,6 @@ public class Trie {
         /*node.id = id;
         node.lat = lat;
         node.lon = lon;*/
-
-        Map<String, Object> m = new HashMap<>();
-        m.put("name", word);
-        m.put("ID", id);
-        m.put("lat", lat);
-        m.put("lon", lon);
         node.extraInfo.add(m);
     }
 
