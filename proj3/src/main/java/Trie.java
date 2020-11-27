@@ -46,6 +46,7 @@ public class Trie {
         node.lon = lon;*/
 
         Map<String, Object> m = new HashMap<>();
+        m.put("name", word);
         m.put("ID", id);
         m.put("lat", lat);
         m.put("lon", lon);
