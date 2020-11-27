@@ -295,7 +295,10 @@ public class GraphDB {
 
     public static void dfs(Trie.TrieNode node, String prefix, String cur, List<String> ans) {
         if (node.children.isEmpty()) {
-            ans.add((String) node.extraInfo.get(0).get("name"));
+            // 将所有相同的名称全部加入ans
+            for (Map<String, Object> m : node.extraInfo) {
+                ans.add((String) m.get("name"));
+            }
             //ans.add(prefix + cur);
             return;
         }
