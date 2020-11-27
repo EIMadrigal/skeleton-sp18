@@ -311,7 +311,7 @@ public class GraphDB {
         }
     }
 
-    public static List<Map<String, Object>> getLocations(String locationName) {
+    public List<Map<String, Object>> getLocations(String locationName) {
         // O(k) do not iterate all the node
         List<Map<String, Object>> ans = new ArrayList<>();
         if (trie.search(locationName)) {
