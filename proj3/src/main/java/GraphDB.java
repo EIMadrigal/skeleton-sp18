@@ -284,7 +284,7 @@ public class GraphDB {
     }
 
     void addNameToTrie(String name, long id, double lat, double lon) {
-        trie.insert(cleanString(name), id, lat, lon);
+        trie.insert(name, id, lat, lon);
     }
 
     public List<String> getLocationsByPrefix(String prefix) {
