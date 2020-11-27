@@ -290,7 +290,7 @@ public class GraphDB {
     public List<String> getLocationsByPrefix(String prefix) {
         List<String> locations = new ArrayList<>();
         // do not need to iterate all the node, just go through the trie, O(k)
-        Trie.TrieNode node = trie.startsWith(cleanString(prefix));
+        Trie.TrieNode node = trie.startsWith(prefix);
         if (node == null) {
             return locations;
         }
