@@ -33,7 +33,7 @@ public class Trie {
 
         Map<String, Object> m = new HashMap<>();
         m.put("name", word);
-        m.put("ID", id);
+        m.put("id", id);
         m.put("lat", lat);
         m.put("lon", lon);
 
