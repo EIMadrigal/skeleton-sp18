@@ -15,7 +15,7 @@ public class Trie {
         }
 
         Map<Character, TrieNode> children;
-        private boolean isWord;
+        public boolean isWord;
         public List<Map<String, Object>> extraInfo;
         /*
         private double lat;
