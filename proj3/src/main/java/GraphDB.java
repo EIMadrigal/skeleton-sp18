@@ -255,9 +255,9 @@ public class GraphDB {
     }
 
     public void addNode(Node v) {
-        if (!vertex.containsValue(v)) {
-            vertex.put(v.id, v);
-            adj.put(v.id, new HashSet<>());
+        if (!vertex.containsKey(v.id())) {
+            vertex.put(v.id(), v);
+            adj.put(v.id(), new HashSet<>());
         }
     }
 
