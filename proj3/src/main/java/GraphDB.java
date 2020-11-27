@@ -95,17 +95,9 @@ public class GraphDB {
             SAXParser saxParser = factory.newSAXParser();
             GraphBuildingHandler gbh = new GraphBuildingHandler(this);
             saxParser.parse(inputStream, gbh);
-
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-
-        // insert all node names into the Trie
-  /*      for (GraphDB.Node node : this.vertex.values()) {
-            if (node.name != null)
-                trie.insert(node.name, node.id, node.lat, node.lon);
-        }*/
-
         clean();
     }
 
@@ -290,7 +282,7 @@ public class GraphDB {
     public List<String> getLocationsByPrefix(String prefix) {
         List<String> locations = new ArrayList<>();
         // do not need to iterate all the node, just go through the trie, O(k)
-        Trie.TrieNode node = trie.startsWith(prefix);
+        Trie.TrieNode node = trie.startsWith(cleanString(prefix));
         if (node == null) {
             return locations;
         }
@@ -303,7 +295,8 @@ public class GraphDB {
 
     public static void dfs(Trie.TrieNode node, String prefix, String cur, List<String> ans) {
         if (node.children.isEmpty()) {
-            ans.add(prefix + cur);
+            ans.add((String) node.extraInfo.get(0).get("name"));
+            //ans.add(prefix + cur);
             return;
         }
         for (Map.Entry<Character, Trie.TrieNode> entry : node.children.entrySet()) {
@@ -314,6 +307,7 @@ public class GraphDB {
     public List<Map<String, Object>> getLocations(String locationName) {
         // O(k) do not iterate all the node
         List<Map<String, Object>> ans = new ArrayList<>();
+        locationName = cleanString(locationName);
         if (trie.search(locationName)) {
             return trie.startsWith(locationName).extraInfo;
         }
