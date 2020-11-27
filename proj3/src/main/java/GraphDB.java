@@ -32,10 +32,30 @@ public class GraphDB {
         protected double lat;
         protected String name;
 
-        protected Node(long id, double lon, double lat) {
+        private Node(long id, double lat, double lon) {
             this.id = id;
-            this.lon = lon;
             this.lat = lat;
+            this.lon = lon;
+        }
+
+        public static Node of(long id, double lat, double lon) {
+            return new Node(id, lat, lon);
+        }
+
+        public long id() {
+            return id;
+        }
+
+        public double lat() {
+            return lat;
+        }
+
+        public double lon() {
+            return lon;
+        }
+
+        public String name() {
+            return name;
         }
     }
 
@@ -49,6 +69,10 @@ public class GraphDB {
             this.fromID = fromID;
             this.toID = toID;
             this.name = name;
+        }
+
+        public String name() {
+            return name;
         }
     }
 
@@ -72,21 +96,16 @@ public class GraphDB {
             GraphBuildingHandler gbh = new GraphBuildingHandler(this);
             saxParser.parse(inputStream, gbh);
 
-
-
-            
-
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
 
         // insert all node names into the Trie
-            for (GraphDB.Node node : this.vertex.values()) {
-                if (node.name != null)
-                    trie.insert(node.name, node.id, node.lat, node.lon);
-            }
-        
-        
+  /*      for (GraphDB.Node node : this.vertex.values()) {
+            if (node.name != null)
+                trie.insert(node.name, node.id, node.lat, node.lon);
+        }*/
+
         clean();
     }
 
@@ -176,11 +195,11 @@ public class GraphDB {
      * @param w The id of the second vertex.
      * @return The initial bearing between the vertices.
      */
-    double bearing(long v, long w) {
+    public double bearing(long v, long w) {
         return bearing(lon(v), lat(v), lon(w), lat(w));
     }
 
-    static double bearing(double lonV, double latV, double lonW, double latW) {
+    public static double bearing(double lonV, double latV, double lonW, double latW) {
         double phi1 = Math.toRadians(latV);
         double phi2 = Math.toRadians(latW);
         double lambda1 = Math.toRadians(lonV);
@@ -196,7 +215,7 @@ public class GraphDB {
      * Returns the vertex closest to the given longitude and latitude.
      * @param lon The target longitude.
      * @param lat The target latitude.
-     * @return The id of the node in the graph closest to the target.
+     * @return The id of the node in the graph closest to the target. O(lgn)
      */
     long closest(double lon, double lat) {
         double minDis = Double.MAX_VALUE;
@@ -216,7 +235,10 @@ public class GraphDB {
      * @param v The id of the vertex.
      * @return The longitude of the vertex.
      */
-    double lon(long v) {
+    public double lon(long v) {
+        if (!vertex.containsKey(v)) {
+            return 0.0;
+        }
         return vertex.get(v).lon;
     }
 
@@ -225,7 +247,10 @@ public class GraphDB {
      * @param v The id of the vertex.
      * @return The latitude of the vertex.
      */
-    double lat(long v) {
+    public double lat(long v) {
+        if (!vertex.containsKey(v)) {
+            return 0.0;
+        }
         return vertex.get(v).lat;
     }
 
@@ -236,8 +261,19 @@ public class GraphDB {
         }
     }
 
+    public ArrayList<String> getWayNames(long v) {
+        ArrayList<String> wayNames = new ArrayList<>();
+        for (Edge e : adj.get(v)) {
+            wayNames.add(e.name);
+        }
+        return wayNames;
+    }
+
     public void addEdge(long fromID, long toID, String name) {
         if (vertex.containsKey(fromID) && vertex.containsKey(toID)) {
+            Node from = vertex.get(fromID);
+            Node to = vertex.get(toID);
+
             Edge edge = new Edge(fromID, toID, name);
             edge.weight = distance(fromID, toID);
 
@@ -247,12 +283,14 @@ public class GraphDB {
         }
     }
 
+    void addNameToTrie(String name, long id, double lat, double lon) {
+        trie.insert(cleanString(name), id, lat, lon);
+    }
 
-
-    public static List<String> getLocationsByPrefix(String prefix) {
+    public List<String> getLocationsByPrefix(String prefix) {
         List<String> locations = new ArrayList<>();
         // do not need to iterate all the node, just go through the trie, O(k)
-        Trie.TrieNode node = trie.startsWith(prefix);
+        Trie.TrieNode node = trie.startsWith(cleanString(prefix));
         if (node == null) {
             return locations;
         }
@@ -264,7 +302,7 @@ public class GraphDB {
     }
 
     public static void dfs(Trie.TrieNode node, String prefix, String cur, List<String> ans) {
-        if (node == null) {
+        if (node.children.isEmpty()) {
             ans.add(prefix + cur);
             return;
         }

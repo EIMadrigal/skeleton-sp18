@@ -46,7 +46,7 @@ public class MapServer {
      * The OSM XML file path. Downloaded from <a href="http://download.bbbike.org/osm/">here</a>
      * using custom region selection.
      **/
-    private static final String OSM_DB_PATH = "../library-sp18/data/berkeley-2018.osm.xml";
+    private static final String OSM_DB_PATH = "../library-sp18/data/berkeley-2018-small.osm.xml";
     /**
      * Each raster request to the server will have the following parameters
      * as keys in the params map accessible by,
@@ -179,9 +179,6 @@ public class MapServer {
             response.redirect("/map.html", 301);
             return true;
         });
-
-
-        //System.out.println("hello");
     }
 
     /**
@@ -292,26 +289,27 @@ public class MapServer {
 
     /**
      * In linear time, collect all the names of OSM locations that prefix-match the query string.
-     * @param prefix Prefix string to be searched for. Could be any case, with our without
+     * @param prefix Prefix string to be searched for. Could be any case, with or without
      *               punctuation.
      * @return A <code>List</code> of the full names of locations whose cleaned name matches the
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
-        List<String> locations = new ArrayList<>();
+   /*     List<String> locations = new ArrayList<>();
         // do not need to iterate all the node, just go through the trie, O(k)
-   /*     Trie.TrieNode node = trie.startsWith(prefix);
+        Trie.TrieNode node = trie.startsWith(prefix);
         if (node == null) {
             return locations;
         }
         else {
             dfs(node, prefix, "", locations);
-        }*/
+        }
 
-        return locations;
+        return locations;*/
+        return graph.getLocationsByPrefix(prefix);
     }
 
-
+/*
     public static void dfs(Trie.TrieNode node, String prefix, String cur, List<String> ans) {
         if (node == null) {
             ans.add(prefix + cur);
@@ -321,7 +319,7 @@ public class MapServer {
             dfs(entry.getValue(), prefix, cur + entry.getKey(), ans);
         }
     }
-
+*/
     /**
      * Collect all locations that match a cleaned <code>locationName</code>, and return
      * information about each node that matches.

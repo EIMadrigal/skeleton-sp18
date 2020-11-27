@@ -1,8 +1,4 @@
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,14 +23,13 @@ public class Router {
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
-
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
         long start = g.closest(stlon, stlat);
         long des = g.closest(destlon, destlat);
 
-        AStarSolver solver = new AStarSolver(g, new GraphDB.Node(start, g.lon(start),
-                g.lat(start)), new GraphDB.Node(des, g.lon(des), g.lat(des)));
+        AStarSolver solver = new AStarSolver(g, GraphDB.Node.of(start, g.lat(start),
+                g.lon(start)), GraphDB.Node.of(des, g.lat(des), g.lon(des)));
 
         Stack<Long> sol = solver.solution();
 
@@ -56,7 +51,89 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+        if (route.size() < 2) {
+            return null;
+        }
+
+        List<NavigationDirection> nd = new ArrayList<>();
+        double prevBearing = 0.0;
+        int direction = NavigationDirection.START;
+        for (int i = 1; i < route.size(); ++i) {
+            long prevNode = route.get(i - 1);
+            long curNode = route.get(i);
+            double curBearing = g.bearing(prevNode, curNode);
+            String curWay = getWay(g, prevNode, curNode);
+            double dis = g.distance(prevNode, curNode);
+            if (i > 1) {
+                direction = getDirection(prevBearing, curBearing);
+            }
+            NavigationDirection turn = new NavigationDirection();
+            turn.direction = direction;
+            turn.distance = dis;
+            turn.way = curWay;
+            nd.add(turn);
+
+            prevBearing = curBearing;
+        }
+        return nd;
+    }
+
+    /**
+     * @param g The graph to use
+     * @param prevNode
+     * @param curNode
+     * @return cur way name
+     */
+    private static String getWay(GraphDB g, long prevNode, long curNode) {
+        for (String a : g.getWayNames(prevNode)) {
+            for (String b : g.getWayNames(curNode)) {
+                if (a.equals(b)) {
+                    return a;
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Calculates what direction we are going based on the two bearings, which
+     * are the angles from true north. We compare the angles to see whether
+     * we are making a left turn or right turn. Then we can just use the absolute value of the
+     * difference to give us the degree of turn (straight, sharp, left, or right).
+     * @param prevBearing A double in [0, 360.0]
+     * @param currBearing A double in [0, 360.0]
+     * @return the Navigation Direction type
+     */
+    private static int getDirection(double prevBearing, double currBearing) {
+        double absDiff = Math.abs(prevBearing - currBearing);
+        if (numInRange(absDiff, 0.0, 15.0)) {
+            return NavigationDirection.STRAIGHT;
+        }
+        if ((currBearing > prevBearing && absDiff < 180.0)
+                || (currBearing < prevBearing && absDiff > 180.0)) {
+            // going right
+            if (numInRange(absDiff, 15.0, 30.0) || absDiff > 330.0) {
+                return NavigationDirection.SLIGHT_RIGHT;
+            } else if (numInRange(absDiff, 30.0, 100.0) || absDiff > 260.0) {
+                return NavigationDirection.RIGHT;
+            } else {
+                return NavigationDirection.SHARP_RIGHT;
+            }
+        } else {
+            // going left
+            if (numInRange(absDiff, 15.0, 30.0) || absDiff > 330.0) {
+                return NavigationDirection.SLIGHT_LEFT;
+            } else if (numInRange(absDiff, 30.0, 100.0) || absDiff > 260.0) {
+                return NavigationDirection.LEFT;
+            } else {
+                return NavigationDirection.SLIGHT_LEFT;
+            }
+        }
+    }
+
+    /** Checks that a value if between the given ranges. */
+    private static boolean numInRange(double value, double from, double to) {
+        return value >= from && value <= to;
     }
 
     /**

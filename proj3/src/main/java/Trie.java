@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class Trie {
 
+    private TrieNode root;
+
     public class TrieNode {
         private TrieNode() {
             children = new HashMap<>();
@@ -14,8 +16,6 @@ public class Trie {
 
         Map<Character, TrieNode> children;
         private boolean isWord;
-
-
         public List<Map<String, Object>> extraInfo;
         /*
         private double lat;
@@ -23,7 +23,7 @@ public class Trie {
         private long id;*/
     }
 
-    TrieNode root;
+
     public Trie() {
         root = new TrieNode();
     }
@@ -51,8 +51,8 @@ public class Trie {
         m.put("lon", lon);
         node.extraInfo.add(m);
     }
-/*
-    public boolean startsWith(String prefix) {
+
+  /*  public boolean startsWith(String prefix) {
         if (prefix == null) {
             return false;
         }

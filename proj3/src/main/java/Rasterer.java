@@ -52,6 +52,8 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
+
+
         Map<String, Object> results = new HashMap<>();
 
         if (params.get("ullon") + EPS < MapServer.ROOT_ULLON || params.get("ullat") > MapServer.ROOT_ULLAT + EPS
