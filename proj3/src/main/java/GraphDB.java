@@ -107,7 +107,7 @@ public class GraphDB {
      * @return Cleaned string.
      */
     static String cleanString(String s) {
-        return s.replaceAll("[^a-zA-Z0-9 ]", "").toLowerCase();
+        return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
     }
 
     /**
