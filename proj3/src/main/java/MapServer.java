@@ -334,11 +334,11 @@ public class MapServer {
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
         // O(k) do not iterate all the node
-        List<Map<String, Object>> ans = new ArrayList<>();
+        //List<Map<String, Object>> ans = new ArrayList<>();
        /* if (trie.search(locationName)) {
             return trie.startsWith(locationName).extraInfo;
         }*/
-        return ans;
+        return graph.getLocations(locationName);
     }
 
     /**
