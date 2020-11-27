@@ -80,7 +80,6 @@ public class MapServer {
     private static Trie trie;
     /* Define any static variables here. Do not define any instance variables of MapServer. */
 
-
     /**
      * Place any initialization statements that will be run before the server main loop here.
      * Do not place it in the main function. Do not place initialization code anywhere else.
@@ -89,12 +88,6 @@ public class MapServer {
     public static void initialize() {
         graph = new GraphDB(OSM_DB_PATH);
         rasterer = new Rasterer();
-/*
-        trie = new Trie();
-        // insert all node names into the Trie
-        for (GraphDB.Node node : graph.vertex.values()) {
-            trie.insert(node.name, node.id, node.lat, node.lon);
-        }*/
     }
 
     public static void main(String[] args) {
@@ -169,10 +162,6 @@ public class MapServer {
                 return gson.toJson(matches);
             }
         });
-
-
-
-
 
         /* Define map application redirect */
         get("/", (request, response) -> {
@@ -335,9 +324,6 @@ public class MapServer {
     public static List<Map<String, Object>> getLocations(String locationName) {
         // O(k) do not iterate all the node
         //List<Map<String, Object>> ans = new ArrayList<>();
-       /* if (trie.search(locationName)) {
-            return trie.startsWith(locationName).extraInfo;
-        }*/
         return graph.getLocations(locationName);
     }
 

@@ -294,6 +294,14 @@ public class GraphDB {
     }
 
     public static void dfs(Trie.TrieNode node, String prefix, String cur, List<String> ans) {
+      /*  if (node.children.isEmpty()) {
+            // 将所有相同的名称全部加入ans
+            for (Map<String, Object> m : node.extraInfo) {
+                ans.add((String) m.get("name"));
+            }
+            //ans.add(prefix + cur);
+            return;
+        }*/
         if (node.isWord) {
             for (Map<String, Object> m : node.extraInfo) {
                 ans.add((String) m.get("name"));
@@ -302,7 +310,7 @@ public class GraphDB {
         if (node.children.isEmpty()) {
             return;
         }
-        
+
         for (Map.Entry<Character, Trie.TrieNode> entry : node.children.entrySet()) {
             dfs(entry.getValue(), prefix, cur + entry.getKey(), ans);
         }
